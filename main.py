@@ -18,7 +18,8 @@ app.include_router(auth_route.auth_router)
 app.include_router(order_route.order_router)
 
 origins = [
-    "http://localhost:5173",  # your React app running locally
+    "http://localhost:5173",
+    "https://cholobrandshop.com"# your React app running locally
     # You can also add other origins here as needed, e.g., production URLs
 ]
 
