@@ -1,3 +1,5 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.application.user.enums import UserRoles
 from src.application.user.models.user import User
 from src.application.user.repositories.user import UserRepository
@@ -6,13 +8,14 @@ import bcrypt
 
 from src.application.user.schemas.token import TokenSchema
 from src.application.user.schemas.user import UserSchema
+from src.modules.db.database_base import session_manager
 from src.modules.jwt import JWTHandler
 
 
 class UserService:
 
-    def __init__(self):
-        self.user_repository = UserRepository()
+    def __init__(self, db_session:AsyncSession):
+        self.user_repository = UserRepository(db_session)
         self.jwt_handler = JWTHandler()
 
     @staticmethod
@@ -26,12 +29,13 @@ class UserService:
     def _check_password(hashed_password:str, password:str) -> bool:
         return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-    def register(self,
+    async def register(self,
                  username: str,
                  password: str,
                  email:str,
                  role: UserRoles) -> UserSchema:
-        user = self.user_repository.get_by_username(username)
+
+        user = await self.user_repository.get_by_username(username)
         if user:
             raise exceptions.DuplicateValueException("Username Already Exists")
 
@@ -41,16 +45,16 @@ class UserService:
                                   hashed_password=hashed_password,
                                   email=email,
                                   role=role)
-            user_created = self.user_repository.create(obj_data=user_to_create)
+            user_created = await self.user_repository.create(obj_data=user_to_create)
             return UserSchema.model_validate(user_created)
         except Exception as error:
             raise Exception("Error registering user ," +  str(error))
 
-    def login(self,
+    async def login(self,
               username: str,
               password: str) -> TokenSchema:
 
-        user = self.user_repository.get_by_username(username)
+        user = await self.user_repository.get_by_username(username)
         if not user or not self._check_password(hashed_password=user.hashed_password, password=password):
             raise exceptions.UnauthorizedException("Wrong Username or Password")
 
@@ -64,6 +68,6 @@ class UserService:
                            token_type="Bearer")
 
 
-    def get_by_username(self,username: str) -> UserSchema:
-        user = self.user_repository.get_by_username(username)
+    async def get_by_username(self,username: str) -> UserSchema:
+        user = await self.user_repository.get_by_username(username)
         return UserSchema.model_validate(user)

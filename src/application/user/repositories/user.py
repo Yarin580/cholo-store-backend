@@ -11,22 +11,24 @@ from src.modules.db.base_repository import BaseRepository
 
 class UserRepository(BaseRepository):
 
-    def __init__(self, session: Session = None):
+    def __init__(self, session: AsyncSession = None):
         super().__init__(model=User,
                          session=session)
 
-    def get_by_username(self, username: str) -> User:
-        users = self.get(username=username)
+    async def get_by_username(self, username: str) -> User:
+        users = await self.get(username=username)
         return None if len(users) == 0 else users[0]
 
 
-    def change_user_role(self, username:str, role:UserRoles) -> User:
-       user = self.get_by_username(username)
+    async def change_user_role(self, username:str, role:UserRoles) -> User:
+       user = await self.get_by_username(username)
        if user is None:
            raise exceptions.NotFoundException("User not found")
 
        user.role = role
-       self.update(user)
+       updated_user = await self.update(user)
+       return updated_user
+
 
 
 

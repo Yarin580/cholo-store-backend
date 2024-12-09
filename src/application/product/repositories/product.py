@@ -10,18 +10,18 @@ from src.application.product.models import Product
 
 class ProductRepository(BaseRepository):
 
-    def __init__(self, session: Session = None):
+    def __init__(self, session: AsyncSession = None):
         super().__init__(model=Product,
                          session=session)
 
 
-    def get_by_name(self, name: str) -> Product:
-        products = self.get(name=name)
+    async def get_by_name(self, name: str) -> Product:
+        products = await self.get(name=name)
         return None if len(products) == 0 else products[0]
 
 
-    def get_by_category_id(self, category_id: int) -> Union[List[Product], List]:
-        products = self.get(category_id=category_id)
+    async def get_by_category_id(self, category_id: int) -> Union[List[Product], List]:
+        products = await self.get(category_id=category_id)
         return [] if len(products) == 0 else products
 
 

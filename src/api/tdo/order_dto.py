@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -10,7 +10,6 @@ from src.application.Order.models import Buyer
 
 class OrderBaseDto(BaseModel):
     total_price: float
-    status: OrderStatus
     recipient_name: str
     shipping_address: str
     shipping_city: str
@@ -25,5 +24,10 @@ class OrderCreateDto(OrderBaseDto):
 
 class OrderResponseDto(OrderBaseDto):
     id: int
-    order_items: List[OrderItemResponseDto] = []
+    status: OrderStatus
+    order_items: List[OrderItemResponseDto] = 'default_factory'
     buyer: BuyerResponseDto = None
+
+class OrderGetRequestDto(BaseModel):
+    order_number: Optional[str] = None
+    buyer_email: Optional[str] = None

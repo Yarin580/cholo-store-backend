@@ -20,7 +20,7 @@ class OrderItem(Base):
     order: Mapped["Order"] = relationship("Order", back_populates="order_items")
 
     product_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("products.id"))
-    product: Mapped["Product"] = relationship("Product")
+    product: Mapped["Product"] = relationship("Product",  lazy="selectin")
 
     def __init__(self, quantity, price, size, order_id, product_id):
         self.quantity = quantity

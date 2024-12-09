@@ -24,8 +24,8 @@ class Order(Base):
 
     # Relationship with Buyer
     buyer_id: Mapped[int] = mapped_column(Integer, ForeignKey("buyers.id"))
-    order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="order")
-    buyer: Mapped["Buyer"] = relationship("Buyer")
+    order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="order", lazy="selectin")
+    buyer: Mapped["Buyer"] = relationship("Buyer", lazy="selectin")
 
     def __init__(self,
                  order_number: str,
@@ -48,7 +48,6 @@ class Order(Base):
         self.shipping_country = shipping_country
         self.shipping_method = shipping_method
         self.buyer_id = buyer_id
-        self.order_items = []
 
 
     def __repr__(self):

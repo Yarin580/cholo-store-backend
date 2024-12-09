@@ -10,7 +10,7 @@ from src.modules.jwt import JWTHandler
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authentication/login")
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> UserResponseDto:
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserResponseDto:
     """Retrieve the current user from the token."""
     jwt_handler = JWTHandler()
     user_payload = jwt_handler.verify_token(token)
@@ -21,7 +21,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> UserResponseDto:
             headers={"WWW-Authenticate": "Bearer"},
         )
     user_service = UserService()
-    user = user_service.get_by_username(username=user_payload.get("username"))
+    user = await user_service.get_by_username(username=user_payload.get("username"))
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -33,8 +33,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> UserResponseDto:
                            role=user.role)
 
 
-def get_current_admin_user(token=Depends(oauth2_scheme)) -> UserResponseDto:
-    current_user = get_current_user(token=token)
+async def get_current_admin_user(token=Depends(oauth2_scheme)) -> UserResponseDto:
+    current_user = await get_current_user(token=token)
     if current_user.role != UserRoles.ADMIN:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail="Invalid or expired token",

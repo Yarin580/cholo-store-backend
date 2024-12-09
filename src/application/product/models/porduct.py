@@ -19,8 +19,8 @@ class Product(Base):
     sale_percentage: Mapped[int] = mapped_column(Integer)
     category_id: Mapped[int] = mapped_column(Integer, ForeignKey("categories.id"))
 
-    category = relationship("Category", back_populates="products")
-    sizes = relationship("ProductSize", back_populates="product", lazy="joined")
+    category = relationship("Category", back_populates="products", lazy="selectin")
+    sizes = relationship("ProductSize", back_populates="product", lazy="selectin")
 
     def __init__(self,
                  name: str,
