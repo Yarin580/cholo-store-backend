@@ -3,7 +3,7 @@ config_section/.env
 .ipynb_checkpoints
 .mypy_cache
 .vscode
-__pycache__
+__pycache__/
 .pytest_cache
 htmlcov
 dist
