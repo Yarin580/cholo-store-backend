@@ -37,7 +37,7 @@ async def get_products_by_categories(category_id: int,
 @category_route.post("/", response_model=CategoryResponseDto)
 async def create_category(category_to_create: CategoryCreateDto,
                           db_session: AsyncSession = Depends(get_db_session)):
-    return CategoryService(db_session).create_category(category_dto=category_to_create)
+    return await CategoryService(db_session).create_category(category_dto=category_to_create)
 
 
 
