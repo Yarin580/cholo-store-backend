@@ -36,7 +36,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme),
                            role=user.role)
 
 
-async def get_current_admin_user(token=Depends(oauth2_scheme)) -> UserResponseDto:
+async def get_current_admin_user(token:str = Depends(oauth2_scheme)) -> UserResponseDto:
     current_user = await get_current_user(token=token)
     if current_user.role != UserRoles.ADMIN:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
