@@ -23,24 +23,24 @@ class Config:
     DEBUG: bool = True
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8000
-    DB_URL: str = f"mysql+aiomysql://fastapi:fastapi@localhost:3306/fastapi"
     JWT_SECRET_KEY: str = "fastapi"
     JWT_ALGORITHM: str = "HS256"
+    DB_URL: str = os.getenv("DB_URL")
     AWS_CREDS: AWSCredentials = AWSCredentials()
     JWT_CONFIG: JwtConfig = JwtConfig()
     MAIL_CONFIG: MailConfig = MailConfig()
 
 
 class DevelopmentConfig(Config):
-    DB_URL: str = f"mysql+aiomysql://root:fastapi@db:3306/fastapi"
+    pass
 
 class LocalConfig(Config):
-    DB_URL: str = os.getenv("DB_URL")
+    pass
 
 
 class ProductionConfig(Config):
     DEBUG: str = False
-    DB_URL: str = f"mysql+aiomysql://fastapi:fastapi@localhost:3306/prod"
+    pass
 
 
 def get_config() -> Config:
