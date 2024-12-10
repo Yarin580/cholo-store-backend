@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 
 class SessionManager:
-    def __init__(self, session_factory: async_sessionmaker, savepoint: bool = False):
+    def __init__(self, session_factory: async_sessionmaker = None, savepoint: bool = False):
         """
         Initializes the session manager with a session factory and optional savepoint support.
         """

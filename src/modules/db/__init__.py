@@ -8,4 +8,5 @@ from src.modules.db.session_manager import SessionManager
 
 async def get_db_session(savepoint: bool = False):
     async with SessionManager(AsyncSessionLocal, savepoint=savepoint) as session:
+        print(f"Session type in get_db_session: {type(session)}")
         yield session

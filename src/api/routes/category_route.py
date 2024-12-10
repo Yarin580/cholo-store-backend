@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.routes import get_current_admin_user
+from src.api.routes import get_current_admin_user, get_current_user
 from src.api.tdo.category_dto import CategoryResponseDto, CategoryCreateDto
 from src.api.tdo.product_tdo import ProductResponseDto
 from src.api.tdo.user_dto import UserResponseDto
@@ -34,7 +34,7 @@ async def get_products_by_categories(category_id: int,
                                      db_session: AsyncSession = Depends(get_db_session)):
     return await ProductService(db_session).get_products_by_category(category_id=category_id)
 
-@category_route.post("/", response_model=CategoryResponseDto)
+@category_route.post("/", response_model=CategoryResponseDto, dependencies=[Depends(get_current_admin_user)])
 async def create_category(category_to_create: CategoryCreateDto,
                           db_session: AsyncSession = Depends(get_db_session)):
     return await CategoryService(db_session).create_category(category_dto=category_to_create)

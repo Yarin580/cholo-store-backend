@@ -3,6 +3,7 @@ from sys import exception
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.api.routes import get_current_admin_user
 from src.api.tdo.product_size_dto import ProductSizeCreateDto
 from src.api.tdo.product_tdo import ProductResponseDto, ProductCreateDto
 from src.application.product.schemas.product import ProductSchema
@@ -32,7 +33,7 @@ async def get_product(product_id: str, db_session: AsyncSession = Depends(get_db
 
 
 @product_router.post("/",
-                     response_model=ProductResponseDto)
+                     response_model=ProductResponseDto, dependencies=[Depends(get_current_admin_user)])
 async def create_product(product_dto: ProductCreateDto,
                          product_size: list[ProductSizeCreateDto] = None,
                          db_session: AsyncSession = Depends(get_db_session)):
