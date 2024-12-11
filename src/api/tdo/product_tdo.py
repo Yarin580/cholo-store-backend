@@ -1,7 +1,10 @@
 import uuid
 
+from fastapi import UploadFile, Form
 from pydantic import BaseModel, Field
 from pydantic.v1 import root_validator
+
+from src.api.tdo.product_size_dto import ProductSizeCreateDto
 
 
 class ProductResponseDto(BaseModel):
@@ -15,9 +18,11 @@ class ProductResponseDto(BaseModel):
 
 
 
+
 class ProductCreateDto(BaseModel):
     name: str
     description: str
     original_price: float
-    sale_percentage: int = 0
+    sale_percentage: int
     category_id: int
+    product_sizes: list[ProductSizeCreateDto]

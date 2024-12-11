@@ -42,7 +42,7 @@ class ProductService:
             raise exceptions.DuplicateValueException(message=f"Product {product_data.name} already exists")
 
         #check if there is a category
-        product_category = self.category_repository.get_category_by_id(category_id=product_data.category_id)
+        product_category = await self.category_repository.get_category_by_id(category_id=product_data.category_id)
         if not product_category:
             raise exceptions.NotFoundException("Category not found")
 

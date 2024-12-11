@@ -39,6 +39,7 @@ class LocalConfig(Config):
 
 
 class ProductionConfig(Config):
+    ENV: str = "production"
     DEBUG: str = False
     pass
 
